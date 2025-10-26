@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using HappenCodeECommerceAPI.Data;
 using HappenCodeECommerceAPI.Models;
 using HappenCodeECommerceAPI.Interfaces;
@@ -8,30 +7,29 @@ namespace HappenCodeECommerceAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class CustomerController : ControllerBase
     {
-        readonly HappenCodeECommerceAPIContext _context;
-        readonly IProductService _productService;
+        //readonly HappenCodeECommerceAPIContext _context;
+        readonly ICustomerService _customerService;
 
-        public ProductsController(HappenCodeECommerceAPIContext context, IProductService productService)
+        //HappenCodeECommerceAPIContext context
+        public CustomerController(ICustomerService customerService)
         {
-            _context = context;
-            _productService = productService;
+            //_context = context;
+            _customerService = customerService;
         }
 
         // CREATE (POST)
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        public async Task<ActionResult<Customer>> CreateCustomer(Customer customer)
         {
-            Console.WriteLine("Stupid chud...");
-
             try
             {
-                var createdProduct = await _productService.CreateProductAsync(product);
+                var createdCustomer = await _customerService.CreateCustomerAsync(customer);
                 return CreatedAtAction(
-                    nameof(GetProduct),
-                    new { id = createdProduct.Id },
-                    createdProduct);
+                    nameof(GetCustomer),
+                    new { id = createdCustomer.Id },
+                    createdCustomer);
             }
 
             catch (ArgumentNullException ex)
@@ -52,12 +50,12 @@ namespace HappenCodeECommerceAPI.Controllers
 
         // READ (GET all)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
             try
             {
-                var products = await _productService.GetAllProductsAsync();
-                return Ok(products);
+                var customers = await _customerService.GetAllCustomersAsync();
+                return Ok(customers);
             }
             catch (ArgumentNullException ex)
             {
@@ -71,11 +69,11 @@ namespace HappenCodeECommerceAPI.Controllers
 
         // READ (GET by id)
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<Product>> GetCustomer(int id)
         {
             try
             {
-                var product = await _productService.GetProductByIdAsync(id);
+                var product = await _customerService.GetCustomerByIdAsync(id);
                 return Ok(product);
             }
             catch (ArgumentNullException ex)
@@ -87,11 +85,11 @@ namespace HappenCodeECommerceAPI.Controllers
 
         // UPDATE (PUT)
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
+        public async Task<ActionResult> UpdateCustomer(int id, Customer updatedCustomer)
         {
             try
             {
-                await _productService.UpdateProductAsync(id, updatedProduct);
+                await _customerService.UpdateCustomerAsync(id, updatedCustomer);
                 return NoContent();
             }
             catch (ArgumentNullException ex)
@@ -102,11 +100,11 @@ namespace HappenCodeECommerceAPI.Controllers
 
         // DELETE
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<ActionResult> DeleteCustomer(int id)
         {
             try
             {
-                await _productService.DeleteProductByIdAsync(id);
+                await _customerService.DeleteCustomerByIdAsync(id);
                 return NoContent();
             }
             catch (ArgumentNullException ex)
@@ -115,19 +113,6 @@ namespace HappenCodeECommerceAPI.Controllers
             }
         }
 
-        [HttpPut("{id}/price")]
-        public async Task<IActionResult> UpdateProductPrice(int id, [FromBody] decimal newPrice)
-        {
-            try
-            {
-                await _productService.UpdatePriceAsync(id, newPrice);
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
     }
 
 }

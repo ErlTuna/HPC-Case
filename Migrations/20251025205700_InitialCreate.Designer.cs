@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HappenCodeECommerceAPI.Migrations
 {
     [DbContext(typeof(HappenCodeECommerceAPIContext))]
-    [Migration("20251024161441_InitialCreate")]
+    [Migration("20251025205700_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

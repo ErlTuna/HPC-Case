@@ -2,6 +2,7 @@
 using HappenCodeECommerceAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HappenCodeECommerceAPI.Migrations
 {
     [DbContext(typeof(HappenCodeECommerceAPIContext))]
-    partial class HappenCodeECommerceAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20251026131843_AddAgeToCustomer")]
+    partial class AddAgeToCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
