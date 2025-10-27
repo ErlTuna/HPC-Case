@@ -65,17 +65,17 @@ Customer:
 - DELETE : /api/Customer/{id}           - Müşteriyi sil
 
 Product:
-POST     : /api/Product                 - Yeni ürün oluştur
-GET      : /api/Product                 - Tüm ürünleri getir
-GET      : /api/Product/{id}            - Belirli ürünü getir
-PUT      : /api/Product/{id}            - Ürünü güncelle
-DELETE   : /api/Product/{id}            - Ürünü sil
+- POST     : /api/Product                 - Yeni ürün oluştur
+- GET      : /api/Product                 - Tüm ürünleri getir
+- GET      : /api/Product/{id}            - Belirli ürünü getir
+- PUT      : /api/Product/{id}            - Ürünü güncelle
+- DELETE   : /api/Product/{id}            - Ürünü sil
 
 Cart:
-GET     : /api/Cart/{customerId}                        - Müşterinin sepetini getir
-POST    : /api/Cart/{customerId}/add/{productId}        - Müşterinin sepetine ürün ekle
-DELETE  : /api/Cart/{customerId}/remove/{productId}     - Müşterinin sepetinden ürün çıkar
-DELETE  : /api/Cart/{customerId}/empty                  - Müşterinin sepetini boşalt
+- GET     : /api/Cart/{customerId}                        - Müşterinin sepetini getir
+- POST    : /api/Cart/{customerId}/add/{productId}        - Müşterinin sepetine ürün ekle
+- DELETE  : /api/Cart/{customerId}/remove/{productId}     - Müşterinin sepetinden ürün çıkar
+- DELETE  : /api/Cart/{customerId}/empty                  - Müşterinin sepetini boşalt
 
 Kurulum / Kullanım
 ----------------------------
