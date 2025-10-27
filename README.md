@@ -72,8 +72,8 @@ Product:
 - DELETE   : /api/Product/{id}            - Ürünü sil
 
 Cart:
-- GET     : /api/Cart/{customerId}                        - Müşterinin sepetini getir
 - POST    : /api/Cart/{customerId}/add/{productId}        - Müşterinin sepetine ürün ekle
+- GET     : /api/Cart/{customerId}                        - Müşterinin sepetini getir
 - DELETE  : /api/Cart/{customerId}/remove/{productId}     - Müşterinin sepetinden ürün çıkar
 - DELETE  : /api/Cart/{customerId}/empty                  - Müşterinin sepetini boşalt
 
