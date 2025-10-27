@@ -9,7 +9,7 @@ Swagger/Postman ile API test edilmiştir.
 API, altı katmandan oluşur :
 
 1) Models : Domain Katmanı / Varlıklar
-Customer, Product, Cart ve CartItem veri yapılarından oluşur.
+- Customer, Product, Cart ve CartItem veri yapılarından oluşur.
 Customer, Product ve Cart için servisler ve controllerlar mevcuttur.
 API uç noktaları aracılığı ile kullanıma sunulurlar.
 
@@ -19,31 +19,31 @@ API uç noktaları aracılığıyla doğrudan kullanıma sunulmaz.
 
 
 2) Interfaces : Soyutlamalar
-Servislerin ve Repoların test edilmesini kolaylaştırır.
+- Servislerin ve Repoların test edilmesini kolaylaştırır.
 İstenildiği takdirde, var olan bir Controller ile aynı arayüzü kullanan başka bir Service kullanılabilir.
 Veya var olan bir Servis, aynı arayüzü kullanan başka bir Repo'yu kullanabilir.
 Implementasyon detayları önemli değildir.
 
 3) Data : EF Core Konfigürasyonu ve DB İletişimi
-DbContext ve EF Core konfigürasyonunu barındırır. Veri tabanı ile olan asıl iletişimden sorumludur.
+- DbContext ve EF Core konfigürasyonunu barındırır. Veri tabanı ile olan asıl iletişimden sorumludur.
 DbContext'i barındıran HappenCodeECommerceAPIContext sınıfında, Customer, Cart ve Product arasındaki ilişkiler tanımlanır.
 (1 müşteri - 1 sepet)
 (1 sepet - 0 veya birden çok ürün)
 (1 sepet ürünü - 1 sepet)
 
 4) Repositories : DB İletişimi
-Veri tabanı ile etkileşime geçen arayüzlerin implementasyonları.
+- Veri tabanı ile etkileşime geçen arayüzlerin implementasyonları.
 CRUD işlemlerini gerçekleştirir.
 Örneğin : ProductRepository.
 
 5) Services : İş Mantığı Katmanı
-İş mantığı kurallarını implemente eder. Modellerin sahip olması gereken özelliklere sahip olduklarını garanti eder.
+- İş mantığı kurallarını implemente eder. Modellerin sahip olması gereken özelliklere sahip olduklarını garanti eder.
 Örnek olarak, CustomerService, müşterinin yaşını kontrol eder, ID'nin özel olup olmadığına bakar ve bir müşteri oluşturulduğunda otomatik olarak bir sepet atar.
 HTTP veya Controller ile ilgilenmez. 
 Farklı repoları, gereken işlem için birlikte kullanır. Örneğin, müşteri oluştururken customerRepo ve cartRepo işbirliği yapar.
 
 6) Controllers : API / Sunum Katmanı (Endpoint)
-HTTP isteklerine yanıt verir ve istekte ne yapılacak ise işi, o servise devreder.
+- HTTP isteklerine yanıt verir ve istekte ne yapılacak ise işi, o servise devreder.
 Servis detayları ile ilgilenmez. Sadece servisten gelen sonuca bakar.
 Örneğin, ProductController'a belli bir ürünün bilgilerini güncellemek için PUT isteği gelir.
 Bu PUT isteği de, isteğe uygun olan metod kullanılarak karşılanır.
