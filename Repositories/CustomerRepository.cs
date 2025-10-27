@@ -25,16 +25,14 @@ namespace HappenCodeECommerceAPI.Repositories
             return await _context.Customers.ToListAsync();
         }
             
-        public async Task AddAsync(Customer customer)
+        public void Add(Customer customer)
         {
             _context.Customers.Add(customer);
-            await SaveAsync();
         }
 
         public async Task<bool> DeleteAsync(Customer customer)
         {
             _context.Customers.Remove(customer);
-            await SaveAsync();
             return true;
         }
 

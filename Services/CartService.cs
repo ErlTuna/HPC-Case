@@ -20,6 +20,25 @@ namespace HappenCodeECommerceAPI.Services
             _productRepo = productRepository;
         }
 
+        public async Task<Cart> CreateCartForCustomerAsync(Customer customer)
+        {
+            // just in case the customer already has a cart
+            var existingCart = await _cartRepo.GetByCustomerIdAsync(customer.Id);
+            if (existingCart != null)
+                return existingCart;
+
+            var cart = new Cart
+            {
+                CustomerId = customer.Id,
+                Customer = customer
+            };
+
+            _context.Carts.Add(cart);
+            await _cartRepo.SaveAsync();
+
+            return cart;
+        }
+
         public async Task AddProductAsync(int customerId, int productId)
         {
             var product = await _productRepo.GetByIdAsync(productId);
@@ -45,6 +64,7 @@ namespace HappenCodeECommerceAPI.Services
             {
                 cart.Items.Add(new CartItem
                 {
+                    ProductId = productId,
                     Product = product,
                     Quantity = 1
                 });
@@ -56,24 +76,32 @@ namespace HappenCodeECommerceAPI.Services
 
         public async Task EmptyCartByCustomerIdAsync(int customerId)
         {
+        
+            // GetCartByCustomerId already throws
             var cart = await GetCartByCustomerId(customerId);
-            if (cart == null)
-                throw new ArgumentNullException("Cart not found for given customer.");
-
-            await _cartRepo.EmptyCartAsync(cart);
+            _cartRepo.EmptyCartAsync(cart);
             await _cartRepo.SaveAsync();
-
+            
         }
 
         public async Task<Cart> GetCartByCustomerId(int customerId)
         {
-            var cart = await _cartRepo.GetByCustomerIdAsync(customerId);
+            var cart = await _cartRepo.GetCartWithItemsAsync(customerId);
             if (cart == null)
                 throw new ArgumentNullException("Cart not found for given customer.");
 
             return cart;
         }
 
+        public async Task<Cart> GetCartById(int id)
+        {
+            var cart = await _cartRepo.GetByIdAsync(id);
+            if (cart == null)
+                throw new ArgumentNullException("Cart not found for given customer.");
+
+            return cart;
+        }
+        
         public async Task RemoveProductAsync(int customerId, int productId)
         {
             var product = await _productRepo.GetByIdAsync(productId);
@@ -95,6 +123,8 @@ namespace HappenCodeECommerceAPI.Services
             await _cartRepo.SaveAsync();
 
         }
+
+        
     }
     
 

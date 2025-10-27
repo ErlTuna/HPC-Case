@@ -9,6 +9,9 @@ namespace HappenCodeECommerceAPI.Models
         public int Age { get; set; }
         public string? Address { get; set; }
         public string? Phone { get; set; }
+        public int? CartId { get; set; }
+        public Cart? Cart { get; set; }
+
     }
 
 }

@@ -130,3 +130,6 @@ D:\2024-2025\Happencode\HappenCodeECommerceAPI\bin\Debug\net9.0\zh-Hant\Microsof
 D:\2024-2025\Happencode\HappenCodeECommerceAPI\bin\Debug\net9.0\Npgsql.dll
 D:\2024-2025\Happencode\HappenCodeECommerceAPI\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 D:\2024-2025\Happencode\HappenCodeECommerceAPI\obj\Debug\net9.0\HappenCodeECommerceAPI.sourcelink.json
+D:\2024-2025\Happencode\HappenCodeECommerceAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\2024-2025\Happencode\HappenCodeECommerceAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\2024-2025\Happencode\HappenCodeECommerceAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll

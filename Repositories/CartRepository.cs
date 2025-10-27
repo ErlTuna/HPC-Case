@@ -14,7 +14,18 @@ namespace HappenCodeECommerceAPI.Repositories
             _context = context;
         }
 
-        
+        public async Task<Cart> CreateCartForCustomerAsync(Customer customer)
+        {
+            var cart = new Cart
+            {
+                CustomerId = customer.Id,
+                Customer = customer
+            };
+
+            _context.Carts.Add(cart);
+                return cart;
+        }
+
         public async Task<Cart?> GetByIdAsync(int id)
         {
             return await _context.Carts.FindAsync(id);
@@ -24,15 +35,15 @@ namespace HappenCodeECommerceAPI.Repositories
         public async Task<Cart?> GetByCustomerIdAsync(int customerId)
         {
             return await _context.Carts
-                        .Include(cart => cart.Items)
-                        .ThenInclude(cartItem => cartItem.Product)
-                        .FirstOrDefaultAsync(cart => cart.CustomerId == customerId);
+            .Include(c => c.Items)          
+            .ThenInclude(ci => ci.Product)
+            .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
-
 
         public async Task AddCartItemAsync(CartItem cartItem)
         {
-            await _context.CartItems.AddAsync(cartItem);      
+            await _context.CartItems.AddAsync(cartItem);
+            await SaveAsync();      
         }
 
         public void RemoveCartItem(CartItem cartItem)
@@ -40,13 +51,13 @@ namespace HappenCodeECommerceAPI.Repositories
             _context.CartItems.Remove(cartItem);
         }
 
-        public async Task<CartItem?> GetCartItemFromCart(Cart cart, int productId)
+        public CartItem? GetCartItemFromCart(Cart cart, int productId)
         {
             var existingItem = cart.Items.FirstOrDefault(ci => ci.ProductId == productId);
             return existingItem;
         }
 
-        public async Task EmptyCartAsync(Cart cart)
+        public void EmptyCartAsync(Cart cart)
         {
             _context.CartItems.RemoveRange(cart.Items);
         }
@@ -56,9 +67,17 @@ namespace HappenCodeECommerceAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task<CartItem?> GetCartItemFromCartAsync(Cart cart, int productId)
+        public async Task<Cart?> GetCartWithItemsAsync(int customerId)
         {
-            throw new NotImplementedException();
+            return await _context.Carts
+            .Include(c => c.Items)          
+            .ThenInclude(ci => ci.Product)
+            .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
+
+
+                        
+        
+
     }
 }

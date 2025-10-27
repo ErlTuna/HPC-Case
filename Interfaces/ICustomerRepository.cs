@@ -4,7 +4,7 @@ namespace HappenCodeECommerceAPI.Interfaces
 {
     public interface ICustomerRepository
     {
-        Task AddAsync(Customer customer);
+        void Add(Customer customer);
         Task<Customer?> GetByIdAsync(int id);
         Task<IEnumerable<Customer>> GetAllAsync();
         Task<bool> DeleteAsync(Customer customer);

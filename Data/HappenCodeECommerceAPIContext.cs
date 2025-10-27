@@ -12,28 +12,29 @@ public class HappenCodeECommerceAPIContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Cart -> CartItems (one-to-many?)
         modelBuilder.Entity<Cart>()
             .HasMany(c => c.Items)
             .WithOne(ci => ci.Cart)
             .HasForeignKey(ci => ci.CartId);
 
+        // CartItem -> Product (one-to-one)
         modelBuilder.Entity<CartItem>()
             .HasOne(ci => ci.Product)
-            .WithMany()  // Product does not track CartItems
+            .WithMany()
             .HasForeignKey(ci => ci.ProductId);
+
+        // Customer -> Cart (one-to-one)
+        modelBuilder.Entity<Customer>()
+            .HasOne(c => c.Cart)
+            .WithOne(ca => ca.Customer)
+            .HasForeignKey<Cart>(ca => ca.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
+    
     public HappenCodeECommerceAPIContext(DbContextOptions<HappenCodeECommerceAPIContext> options)
             : base(options)
     {
     }
-
-    
-    /*
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql("Host=localhost;Database=mydb;Username=myuser;Password=mypassword");
-    }
-    */
-
 
 }

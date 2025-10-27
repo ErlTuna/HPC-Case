@@ -9,7 +9,6 @@ namespace HappenCodeECommerceAPI.Interfaces
         Task<Product> CreateProductAsync(Product product);
         Task UpdateProductAsync(int id, Product updatedProduct);
         Task DeleteProductByIdAsync(int id);
-        Task UpdatePriceAsync(int id, decimal newPrice);
     }
 }
 

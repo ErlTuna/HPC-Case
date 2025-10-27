@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HappenCodeECommerceAPI.Migrations
 {
     [DbContext(typeof(HappenCodeECommerceAPIContext))]
-    [Migration("20251025205700_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251027182053_Finale")]
+    partial class Finale
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,12 +32,41 @@ namespace HappenCodeECommerceAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
                     b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("HappenCodeECommerceAPI.Models.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("HappenCodeECommerceAPI.Models.Customer", b =>
@@ -50,6 +79,12 @@ namespace HappenCodeECommerceAPI.Migrations
 
                     b.Property<string>("Address")
                         .HasColumnType("text");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -75,9 +110,6 @@ namespace HappenCodeECommerceAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CartId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -87,21 +119,47 @@ namespace HappenCodeECommerceAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
-
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("HappenCodeECommerceAPI.Models.Product", b =>
-                {
-                    b.HasOne("HappenCodeECommerceAPI.Models.Cart", null)
-                        .WithMany("Products")
-                        .HasForeignKey("CartId");
                 });
 
             modelBuilder.Entity("HappenCodeECommerceAPI.Models.Cart", b =>
                 {
-                    b.Navigation("Products");
+                    b.HasOne("HappenCodeECommerceAPI.Models.Customer", "Customer")
+                        .WithOne("Cart")
+                        .HasForeignKey("HappenCodeECommerceAPI.Models.Cart", "CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("HappenCodeECommerceAPI.Models.CartItem", b =>
+                {
+                    b.HasOne("HappenCodeECommerceAPI.Models.Cart", "Cart")
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HappenCodeECommerceAPI.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("HappenCodeECommerceAPI.Models.Cart", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("HappenCodeECommerceAPI.Models.Customer", b =>
+                {
+                    b.Navigation("Cart");
                 });
 #pragma warning restore 612, 618
         }

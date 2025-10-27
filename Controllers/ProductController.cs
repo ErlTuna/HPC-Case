@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using HappenCodeECommerceAPI.Data;
 using HappenCodeECommerceAPI.Models;
 using HappenCodeECommerceAPI.Interfaces;
 
@@ -10,21 +8,15 @@ namespace HappenCodeECommerceAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        readonly HappenCodeECommerceAPIContext _context;
         readonly IProductService _productService;
-
-        public ProductsController(HappenCodeECommerceAPIContext context, IProductService productService)
+        public ProductsController(IProductService productService)
         {
-            _context = context;
             _productService = productService;
         }
 
-        // CREATE (POST)
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(Product product)
         {
-            Console.WriteLine("Stupid chud...");
-
             try
             {
                 var createdProduct = await _productService.CreateProductAsync(product);
@@ -50,7 +42,6 @@ namespace HappenCodeECommerceAPI.Controllers
         }
 
 
-        // READ (GET all)
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
@@ -69,7 +60,6 @@ namespace HappenCodeECommerceAPI.Controllers
             }
         }
 
-        // READ (GET by id)
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
@@ -85,7 +75,6 @@ namespace HappenCodeECommerceAPI.Controllers
         
         }
 
-        // UPDATE (PUT)
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
         {
@@ -109,23 +98,10 @@ namespace HappenCodeECommerceAPI.Controllers
                 await _productService.DeleteProductByIdAsync(id);
                 return NoContent();
             }
+            
             catch (ArgumentNullException ex)
             {
                 return NotFound(ex.Message);
-            }
-        }
-
-        [HttpPut("{id}/price")]
-        public async Task<IActionResult> UpdateProductPrice(int id, [FromBody] decimal newPrice)
-        {
-            try
-            {
-                await _productService.UpdatePriceAsync(id, newPrice);
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
             }
         }
     }

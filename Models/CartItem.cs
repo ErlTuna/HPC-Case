@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using HappenCodeECommerceAPI.Models;
 
 namespace HappenCodeECommerceAPI.Models
@@ -10,6 +11,7 @@ namespace HappenCodeECommerceAPI.Models
         public int Quantity { get; set; } = 1;
 
         public int CartId { get; set; }
+        [JsonIgnore]
         public Cart Cart { get; set; } = null!;
     }
 }    

@@ -27,24 +27,12 @@ namespace HappenCodeECommerceAPI.Repositories
             
         public async Task AddAsync(Product product)
         {
-            _context.Products.Add(product);
-            await SaveAsync();
-        }
-
-        public async Task<bool> UpdatePriceAsync(int id, decimal newPrice)
-        {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null) return false;
-
-            product.Price = newPrice;
-            await SaveAsync();
-            return true;
+            await _context.Products.AddAsync(product);
         }
 
         public async Task<bool> DeleteAsync(Product product)
         {
             _context.Products.Remove(product);
-            await SaveAsync();
             return true;
         }
 

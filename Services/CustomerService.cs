@@ -1,44 +1,45 @@
-using HappenCodeECommerceAPI.Data;
 using HappenCodeECommerceAPI.Models;
-using Microsoft.EntityFrameworkCore;
 using HappenCodeECommerceAPI.Interfaces;
 
 namespace HappenCodeECommerceAPI.Services
 {
     public class CustomerService : ICustomerService
     {
-        readonly HappenCodeECommerceAPIContext _context;
-        readonly ICustomerRepository _repo;
+        readonly ICustomerRepository _customerRepo;
+        readonly ICartRepository _cartRepo;
 
-        public CustomerService(HappenCodeECommerceAPIContext context, ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository, ICartRepository cartRepository)
         {
-            _context = context;
-            _repo = customerRepository;
+            _customerRepo = customerRepository;
+            _cartRepo = cartRepository;
         }
 
         public async Task<Customer> CreateCustomerAsync(Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException(nameof(customer), "customer cannot be null.");
+                throw new ArgumentNullException("Customer cannot be null.", nameof(customer));
 
             if (string.IsNullOrWhiteSpace(customer.FirstName))
-                throw new ArgumentException("Customer first name is missing/empty.", nameof(customer.FirstName));
+                throw new InvalidOperationException("Customer first name is missing/empty.");
             
             if (string.IsNullOrWhiteSpace(customer.LastName))
-                throw new ArgumentException("Customer last name is missing/empty.", nameof(customer.LastName));
+                throw new InvalidOperationException("Customer last name is missing/empty.");
 
             if (customer.Age < 18)
-                throw new ArgumentException("Customer age cannot be less than 18.", nameof(customer.Age));
+                throw new InvalidOperationException("Customer age cannot be less than 18.");
 
-            await _repo.AddAsync(customer);
-            await _repo.SaveAsync();
+            _customerRepo.Add(customer);
+            var cart = await _cartRepo.CreateCartForCustomerAsync(customer);
+            customer.CartId = cart.Id;
+            customer.Cart = cart;
+            await _customerRepo.SaveAsync();
 
             return customer;
         }
 
         public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
         {
-            var customers = await _repo.GetAllAsync();
+            var customers = await _customerRepo.GetAllAsync();
 
             if (customers == null)
                 throw new ArgumentNullException("No customers list found.");
@@ -48,7 +49,7 @@ namespace HappenCodeECommerceAPI.Services
 
         public async Task<Customer> GetCustomerByIdAsync(int id)
         {
-            var customer = await _repo.GetByIdAsync(id);
+            var customer = await _customerRepo.GetByIdAsync(id);
             if (customer == null)
                 throw new ArgumentNullException("No customer found that matches the given id.");
 
@@ -57,9 +58,10 @@ namespace HappenCodeECommerceAPI.Services
 
         public async Task UpdateCustomerAsync(int id, Customer updatedCustomer)
         {
-            var customer = await _repo.GetByIdAsync(id);
+            var customer = await _customerRepo.GetByIdAsync(id);
             if (customer == null)
                 throw new ArgumentNullException("No customer found that matches the given id.");
+
             if (string.IsNullOrWhiteSpace(customer.FirstName))
                 throw new ArgumentException("Updated customer doesn't have a first name or has an empty first name.", nameof(updatedCustomer.FirstName));
 
@@ -75,16 +77,17 @@ namespace HappenCodeECommerceAPI.Services
             customer.Address = updatedCustomer.Address;
             customer.Phone = updatedCustomer.Phone;
 
-            await _repo.SaveAsync();
+            await _customerRepo.SaveAsync();
         }
         
         public async Task DeleteCustomerByIdAsync(int id)
         {
-            var customer = await _repo.GetByIdAsync(id);
+            var customer = await _customerRepo.GetByIdAsync(id);
             if (customer == null)
                 throw new ArgumentNullException("No customer found that matches the given id.");
 
-            await _repo.DeleteAsync(customer);
+            await _customerRepo.DeleteAsync(customer);
+            await _customerRepo.SaveAsync();
         }
 
     }
